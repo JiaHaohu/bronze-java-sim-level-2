@@ -1,8 +1,6 @@
 package com.tw.exam;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Library {
     private final List<Book> books = new ArrayList<>();
@@ -22,8 +20,39 @@ public class Library {
         // TODO:
         //   Please implement the method
         // <-start-
-        return null;
+        List<Book> booksFound = findBooksByTagUnordered(tags);
+        sortByIsbn(booksFound);
+        return booksFound;
         // --end-->
+    }
+
+    private void sortByIsbn(List<Book> booksFound) {
+        booksFound.sort(Comparator.comparing(Book::getIsbn));
+    }
+
+    private List<Book> findBooksByTagUnordered(String[] tags) {
+        List<Book> booksFound = new ArrayList<>();
+        Set<String> nonDuplicatedTags = distinct(tags);
+        for (Book book : books) {
+            if (containsTags(book, nonDuplicatedTags)) {
+                booksFound.add(book);
+            }
+        }
+        return booksFound;
+    }
+
+    private boolean containsTags(Book book, Set<String> tags) {
+        for (String bookTag : book.getTags()) {
+            if (tags.contains(bookTag)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private Set<String> distinct(String[] tags) {
+        return new HashSet<>(Arrays.asList(tags));
     }
 
     // TODO:
